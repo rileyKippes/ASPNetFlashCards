@@ -17,7 +17,7 @@ namespace FlashCards.Controllers
         {
             ShowBanner = true,
             Banner = "Ready",
-            BannerTime = 5000
+            BannerTime = 2000 //2 seconds
         };
 
         private readonly ILogger<Config> _logger;

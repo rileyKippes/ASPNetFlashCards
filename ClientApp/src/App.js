@@ -14,10 +14,17 @@ export default class App extends Component {
             answer: '0',
             answerDisplayTypes: ['none', 'block'],
             answerDisplay: 0,
-            ready: false
+            config: {showBanner: false},
+            loading: true
+            
         }
         this.randInt = this.randInt.bind(this);
         this.generateNewCard = this.generateNewCard.bind(this);
+    }
+
+    componentDidMount() {
+        this.generateNewCard();
+        this.getConfig();
     }
 
     randInt(min, max) {
@@ -45,7 +52,14 @@ export default class App extends Component {
     }
 
     render() {
-        if (!this.state.ready) { this.generateNewCard(); }
+        if (this.state.loading) {
+            return <div className="m-2 alert alert-primary" role="alert"> Loading. . . </div>
+        }
+
+        if (this.state.config.showBanner) {
+            setTimeout(() => this.setState({ config: { showBanner: false } }), this.state.config.bannerTime);
+            return <div className="m-2 alert alert-success" role="alert"> {this.state.config.banner}</div>
+        }
         return (
             <div className="row justify-content-center">
                 <div className="col-xl-8 col-lg-10">
@@ -66,5 +80,11 @@ export default class App extends Component {
                 </div>
             </div>
         );
+    }
+
+    async getConfig() {
+        const response = await fetch('config');
+        const data = await response.json();
+        this.setState({ config: data, loading: false });
     }
 }
